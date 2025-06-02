@@ -65,16 +65,20 @@ const CompanyChatPage: React.FC = () => {
         ? `以下是公司職缺資訊，請產生一段 2~3 句的分析摘要，建議應徵人選特質或能力方向：\n${prompt}`
         : `Here is a job posting. Please generate a 2-3 sentence summary with recommended candidate traits and skills:\n${prompt}`;
 
+      if (!API_KEY) {
+        throw new Error('API key is not configured');
+      }
+
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': REFERER,
-          'X-Title': TITLE,
+          'HTTP-Referer': REFERER || window.location.origin,
+          'X-Title': TITLE || 'TalenTag AI Assistant',
         },
         body: JSON.stringify({
-          model: MODEL,
+          model: MODEL || 'openai/gpt-3.5-turbo',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: finalPrompt },
@@ -105,16 +109,20 @@ const CompanyChatPage: React.FC = () => {
     setIsLoading(true);
 
     try {
+      if (!API_KEY) {
+        throw new Error('API key is not configured');
+      }
+
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': REFERER,
-          'X-Title': TITLE,
+          'HTTP-Referer': REFERER || window.location.origin,
+          'X-Title': TITLE || 'TalenTag AI Assistant',
         },
         body: JSON.stringify({
-          model: MODEL,
+          model: MODEL || 'openai/gpt-3.5-turbo',
           messages: [
             { role: 'system', content: systemPrompt },
             ...newMessages.map((m) => ({ role: m.role as Role, content: m.content })),
